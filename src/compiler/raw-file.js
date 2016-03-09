@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { GeneralError } from '../errors/runtime';
 import MESSAGE from '../errors/runtime/message';
 
@@ -11,8 +12,16 @@ export default class RawFileCompiler {
         test.fixture = fixture;
 
         test.fn = async testRun => {
-            for (var i = 0; i < test.commands.length; i++)
-                await testRun.executeCommand(test.commands[i]);
+            for (var i = 0; i < test.commands.length; i++) {
+                var command  = cloneDeep(test.commands[i]);
+                var selector = command.arguments ? command.arguments.selector : null;
+
+                //TODO: add a flag with selector type when hybrid functions are implemented
+                if (selector)
+                    command.arguments.selector = `(function () { return document.querySelector('${selector}') })()`;
+
+                await testRun.executeCommand(command);
+            }
         };
 
         return test;

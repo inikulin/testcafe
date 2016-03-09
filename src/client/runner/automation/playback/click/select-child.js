@@ -4,7 +4,6 @@ import testCafeUI from '../../../deps/testcafe-ui';
 import * as automationSettings from '../../settings';
 import MoveAutomation from '../move';
 import MoveOptions from '../../options/move';
-import delay from '../../../utils/delay';
 import * as mouseUtils from '../../../utils/mouse';
 
 var Promise = hammerhead.Promise;
@@ -15,6 +14,7 @@ var focusBlurSandbox = hammerhead.eventSandbox.focusBlur;
 
 var domUtils   = testCafeCore.domUtils;
 var styleUtils = testCafeCore.styleUtils;
+var delay      = testCafeCore.delay;
 
 var selectElementUI = testCafeUI.selectElement;
 

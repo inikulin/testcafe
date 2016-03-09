@@ -1,5 +1,6 @@
 var hammerhead    = window.getTestCafeModule('hammerhead');
 var hhsettings    = hammerhead.get('./settings').get();
+var Promise       = hammerhead.Promise;
 var iframeSandbox = hammerhead.sandbox.iframe;
 
 var testCafeCore = window.getTestCafeModule('testCafeCore');
@@ -9,7 +10,6 @@ var transport    = testCafeCore.get('./transport');
 var testCafeRunner = window.getTestCafeModule('testCafeRunner');
 var Runner         = testCafeRunner.get('./runner');
 var RunnerBase     = testCafeRunner.get('./runner-base');
-var actionBarrier  = testCafeRunner.get('./action-barrier/action-barrier');
 
 
 QUnit.begin(function () {
@@ -25,13 +25,11 @@ QUnit.done(function () {
     iframeSandbox.off(iframeSandbox.RUN_TASK_SCRIPT, window.initIFrameTestHandler);
 });
 
-transport.batchUpdate                = function (callback) {
+transport.batchUpdate = function (callback) {
     callback();
 };
-actionBarrier.waitPageInitialization = function (callback) {
-    callback();
-};
-$.fn.load                            = function (callback) {
+
+$.fn.load = function (callback) {
     callback();
 };
 
@@ -116,8 +114,8 @@ function wrapIFrameArgument (arg) {
 }
 
 test('DOM element', function () {
-    var arg                 = null,
-        testRunner          = new RunnerBase();
+    var arg        = null,
+        testRunner = new RunnerBase();
 
     testRunner._initApi();
     testRunner._runInIFrame = function (iFrame) {
@@ -131,8 +129,8 @@ test('DOM element', function () {
 });
 
 test('jQuery object', function () {
-    var arg                 = null,
-        testRunner          = new RunnerBase();
+    var arg        = null,
+        testRunner = new RunnerBase();
 
     testRunner._initApi();
     testRunner._runInIFrame = function (iFrame) {
@@ -146,8 +144,8 @@ test('jQuery object', function () {
 });
 
 test('string selector', function () {
-    var arg                 = null,
-        testRunner          = new RunnerBase();
+    var arg        = null,
+        testRunner = new RunnerBase();
 
     testRunner._initApi();
     testRunner._runInIFrame = function (iFrame) {
@@ -161,8 +159,8 @@ test('string selector', function () {
 });
 
 test('function', function () {
-    var arg                 = null,
-        testRunner          = new RunnerBase();
+    var arg        = null,
+        testRunner = new RunnerBase();
 
     testRunner._initApi();
     testRunner._runInIFrame = function (iFrame) {
@@ -185,7 +183,7 @@ test('empty argument error', function () {
     testRunner.inIFrame(wrapIFrameArgument(null), 0)();
 
     equal(lastError.type, ERROR_TYPE.emptyIFrameArgument);
-    lastError      = null;
+    lastError = null;
 
     testRunner.inIFrame(wrapIFrameArgument('#notExistingIFrame'), 0)();
     equal(lastError.type, ERROR_TYPE.emptyIFrameArgument);
@@ -220,9 +218,9 @@ test('incorrect argument error', function () {
 
     testRunner.inIFrame(wrapIFrameArgument(['#iframe']), 0)();
     equal(lastError.type, ERROR_TYPE.incorrectIFrameArgument);
-    lastError      = null;
+    lastError = null;
 
     testRunner.inIFrame(wrapIFrameArgument({ iFrame: $('#iframe') }), 0)();
     equal(lastError.type, ERROR_TYPE.incorrectIFrameArgument);
-    lastError      = null;
+    lastError = null;
 });

@@ -1,8 +1,17 @@
 import path from 'path';
+import { readSync as read } from 'read-file-relative';
 import Promise from 'pinkie';
+import Mustache from 'mustache';
 import { Session } from 'testcafe-hammerhead';
-import { createDoneCommand } from './commands';
+//TODO: get rid of legacy errors here
+import TestRunErrorFormattableAdapter from '../legacy/test-run-error/formattable-adapter';
+import TestDoneCommand from './command/test-done';
+import COMMAND_TYPE from './command/command-type';
 import CLIENT_MESSAGES from './client-messages';
+
+
+//Const
+const TEST_RUN_TEMPLATE = read('../client/test-run/index.js.mustache');
 
 
 export default class TestRun extends Session {
@@ -21,11 +30,21 @@ export default class TestRun extends Session {
         this.pendingRequest = null;
         this.pendingJsError = null;
 
+        this.injectable.scripts.push('/testcafe-core.js');
+        this.injectable.scripts.push('/testcafe-ui.js');
+        this.injectable.scripts.push('/testcafe-runner.js');
+        this.injectable.scripts.push('/testcafe-driver.js');
+        this.injectable.styles.push('/testcafe-ui-styles.css');
+
         this.errs = [];
     }
 
     _getPayloadScript () {
-        // TODO
+        return Mustache.render(TEST_RUN_TEMPLATE, {
+            testRunId:           this.id,
+            browserHeartbeatUrl: this.browserConnection.heartbeatUrl,
+            browserStatusUrl:    this.browserConnection.statusUrl
+        });
     }
 
     _getIframePayloadScript () {
@@ -34,12 +53,13 @@ export default class TestRun extends Session {
 
     async _start () {
         this.started = true;
+        this.emit('start');
 
         try {
             await this.test.fn(this);
         }
         catch (err) {
-            this.errs.push(err);
+            this.errs.push(new TestRunErrorFormattableAdapter(err, this.browserConnection.userAgent, '', ''));
         }
         finally {
             this._done();
@@ -48,11 +68,11 @@ export default class TestRun extends Session {
 
     async _done () {
         if (this.pendingJsError) {
-            this.errs.push(this.pendingJsError);
+            this.errs.push(new TestRunErrorFormattableAdapter(this.pendingJsError, this.browserConnection.userAgent, '', ''));
             this.pendingJsError = null;
         }
 
-        await this.executeCommand(createDoneCommand());
+        await this.executeCommand(new TestDoneCommand());
         this.emit('done');
     }
 
@@ -104,14 +124,17 @@ export default class TestRun extends Session {
 // Service message handlers
 var ServiceMessages = TestRun.prototype;
 
-ServiceMessages[CLIENT_MESSAGES.ready] = function (commandResult) {
+ServiceMessages[CLIENT_MESSAGES.ready] = function (msg) {
+    var commandResult = msg.commandResult;
+
     this.pendingRequest = null;
 
     if (!this.started)
         this._start();
 
     if (this.pendingCommand) {
-        if (commandResult) {
+        //NOTE: ignore client messages if testDone command is received
+        if (this.pendingCommand.command.type !== COMMAND_TYPE.testDone && commandResult) {
             if (commandResult.failed)
                 this._rejectPendingCommand(commandResult.err);
             else

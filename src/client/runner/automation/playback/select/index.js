@@ -6,7 +6,6 @@ import * as selectUtils from './utils';
 import MoveAutomation from '../move';
 import MoveOptions from '../../options/move';
 import cursor from '../../cursor';
-import delay from '../../../utils/delay';
 
 var Promise          = hammerhead.Promise;
 var browserUtils     = hammerhead.utils.browser;
@@ -18,6 +17,7 @@ var textSelection   = testCafeCore.textSelection;
 var domUtils        = testCafeCore.domUtils;
 var positionUtils   = testCafeCore.positionUtils;
 var eventUtils      = testCafeCore.eventUtils;
+var delay           = testCafeCore.delay;
 
 
 export default class SelectAutomation {
@@ -187,8 +187,8 @@ export default class SelectAutomation {
     }
 
     run () {
-        return this.
-            _moveToPoint(this.absoluteStartPoint)
+        return this
+            ._moveToPoint(this.absoluteStartPoint)
             .then(() => this._mousedown())
             .then(() => this._moveToPoint(this.absoluteEndPoint))
             .then(() => this._mouseup());

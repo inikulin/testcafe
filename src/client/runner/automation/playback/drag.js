@@ -6,7 +6,6 @@ import MoveAutomation from '../playback/move';
 import MoveOptions from '../options/move';
 import cursor from '../cursor';
 import * as mouseUtils from '../../utils/mouse';
-import delay from '../../utils/delay';
 
 const DRAGGING_SPEED = 4; // pixels/ms
 const MIN_MOVING_TIME = 25;
@@ -21,6 +20,7 @@ var contentEditable = testCafeCore.contentEditable;
 var positionUtils   = testCafeCore.positionUtils;
 var domUtils        = testCafeCore.domUtils;
 var styleUtils      = testCafeCore.styleUtils;
+var delay           = testCafeCore.delay;
 
 
 export default class DragAutomation {
@@ -183,8 +183,7 @@ export default class DragAutomation {
     run () {
         var moveArguments = this._getMoveArguments();
 
-        return this.
-            _move(moveArguments)
+        return this._move(moveArguments)
             .then(() => this._mousedown())
             .then(() => this._drag())
             .then(() => this._mouseup());

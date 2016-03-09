@@ -6,7 +6,6 @@ import ClickAutomation from '../playback/click';
 import typeCharPlaybackAutomation from './type-char';
 import getKeyCode from '../../utils/get-key-code';
 import { getOffsetOptions } from '../../utils/mouse';
-import delay from '../../utils/delay';
 import async from '../../deps/async';
 
 var browserUtils          = hammerhead.utils.browser;
@@ -19,6 +18,7 @@ var positionUtils   = testCafeCore.positionUtils;
 var domUtils        = testCafeCore.domUtils;
 var contentEditable = testCafeCore.contentEditable;
 var textSelection   = testCafeCore.textSelection;
+var delay           = testCafeCore.delay;
 
 
 function findTextEditableChild (el) {

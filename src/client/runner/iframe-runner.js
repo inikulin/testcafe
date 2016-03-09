@@ -3,9 +3,9 @@ import testCafeCore from './deps/testcafe-core';
 import * as dialogsAPI from './api/native-dialogs';
 import RunnerBase from './runner-base.js';
 
-var SETTINGS                 = testCafeCore.SETTINGS;
-var messageSandbox           = hammerhead.eventSandbox.message;
-var serviceUtils             = testCafeCore.serviceUtils;
+var SETTINGS       = testCafeCore.SETTINGS;
+var messageSandbox = hammerhead.eventSandbox.message;
+var serviceUtils   = testCafeCore.serviceUtils;
 
 
 var IFrameRunner = function (startedCallback) {
@@ -15,9 +15,6 @@ var IFrameRunner = function (startedCallback) {
 };
 
 serviceUtils.inherit(IFrameRunner, RunnerBase);
-
-IFrameRunner.prototype._initPageLoadBarrier = function () {
-};
 
 IFrameRunner.prototype._prepareStepsExecuting = function (callback) {
     callback();

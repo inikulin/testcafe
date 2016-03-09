@@ -8,7 +8,6 @@ import MoveAutomation from '../move';
 import MoveOptions from '../../options/move';
 import SelectChildClickAutomation from './select-child';
 import cursor from '../../cursor';
-import delay from '../../../utils/delay';
 import nextTick from '../../../utils/next-tick';
 import * as mouseUtils from '../../../utils/mouse';
 
@@ -22,6 +21,7 @@ var domUtils      = testCafeCore.domUtils;
 var positionUtils = testCafeCore.positionUtils;
 var styleUtils    = testCafeCore.styleUtils;
 var eventUtils    = testCafeCore.eventUtils;
+var delay         = testCafeCore.delay;
 
 var selectElementUI = testCafeUI.selectElement;
 

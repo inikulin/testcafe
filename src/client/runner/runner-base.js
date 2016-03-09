@@ -7,11 +7,11 @@ import * as actionsAPI from './api/actions';
 import * as dialogsAPI from './api/native-dialogs';
 import * as automation from './automation/automation';
 import * as automationIFrameBehavior from './automation/iframe-behavior';
-import * as actionBarrier from './action-barrier/action-barrier';
 
 
 var messageSandbox = hammerhead.eventSandbox.message;
 
+var XhrBarrier            = testCafeCore.XhrBarrier;
 var sandboxedJQuery       = testCafeCore.sandboxedJQuery;
 var SETTINGS              = testCafeCore.SETTINGS;
 var COMMAND               = testCafeCore.COMMAND;
@@ -25,31 +25,10 @@ var eventUtils            = testCafeCore.eventUtils;
 var modalBackground = testCafeUI.modalBackground;
 
 
-const PAGE_LOAD_TIMEOUT                  = 3000;
 const ANIMATIONS_WAIT_DELAY              = 200;
 const CHECK_FILE_DOWNLOADING_DELAY       = 500;
 const IFRAME_EXISTENCE_WATCHING_INTERVAL = 1000;
 
-
-//Util
-function waitPageLoad (callback) {
-    var loaded          = false,
-        callbackWrapper = function () {
-            if (!loaded) {
-                loaded = true;
-                callback();
-            }
-        };
-
-    eventUtils.bind(window, 'load', callbackWrapper);
-    eventUtils
-        .documentReady()
-        .then(() => {
-            //NOTE: an iFrame may be removed in this moment
-            if (domUtils.isIFrameWindowInDOM(window) || domUtils.isTopWindow(window))
-                window.setTimeout(callbackWrapper, PAGE_LOAD_TIMEOUT);
-        });
-}
 
 //Init
 var RunnerBase = function () {
@@ -62,6 +41,8 @@ var RunnerBase = function () {
     this.stopped                     = false;
     this.listenNativeDialogs         = false;
     this.isFileDownloadingIntervalID = null;
+
+    this.pageInitialXhrBarrier = null;
 
     this.assertionsAPI = new AssertionsAPI(function (err) {
         runner.stepIterator.onAssertionFailed(err);
@@ -180,7 +161,7 @@ RunnerBase.prototype._destroy = function () {
 };
 
 RunnerBase.prototype._initBarrier = function () {
-    actionBarrier.init();
+    this.pageInitialXhrBarrier = new XhrBarrier();
 };
 
 RunnerBase.prototype._initIFrameBehavior = function () {
@@ -305,13 +286,17 @@ RunnerBase.prototype._prepareStepsExecuting = function (callback, skipPageWaitin
     if (skipPageWaiting)
         callback();
     else {
-        waitPageLoad(() => {
-            window.setTimeout(() => {
-                transport.batchUpdate(() => {
-                    actionBarrier.waitPageInitialization(callback);
-                });
-            }, ANIMATIONS_WAIT_DELAY);
-        });
+        eventUtils
+            .documentReady()
+            .then(() => {
+                window.setTimeout(() => {
+                    transport.batchUpdate(() => {
+                        this.pageInitialXhrBarrier
+                            .wait(true)
+                            .then(callback);
+                    });
+                }, ANIMATIONS_WAIT_DELAY);
+            });
     }
 };
 

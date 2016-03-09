@@ -3,7 +3,6 @@ import testCafeCore from '../../../deps/testcafe-core';
 import KeyPressSimulator from './key-press-simulator';
 import supportedShortcutHandlers from './shortcuts';
 import each from '../../../utils/promise-each';
-import delay from '../../../utils/delay';
 import { getKeyArray, excludeShiftModifiedKeys } from './utils';
 import { ACTION_STEP_DELAY } from '../../settings';
 
@@ -12,6 +11,7 @@ var browserUtils = hammerhead.utils.browser;
 
 var arrayUtils = testCafeCore.arrayUtils;
 var domUtils   = testCafeCore.domUtils;
+var delay      = testCafeCore.delay;
 
 
 const KEY_PRESS_DELAY = 80;

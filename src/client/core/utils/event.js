@@ -55,15 +55,18 @@ export function documentReady () {
         }
 
         function onContentLoaded () {
+            if (!domUtils.isIFrameWindowInDOM(window) && !domUtils.isTopWindow(window))
+                return;
+
             document.removeEventListener('DOMContentLoaded', onContentLoaded);
             ready();
         }
 
 
         if (document.readyState === 'complete')
-            return window.setTimeout(ready, 1);
+            return window.setTimeout(onContentLoaded, 1);
 
-        document.addEventListener('DOMContentLoaded', onContentLoaded);
-        window.addEventListener('load', ready);
+        bind(document, 'DOMContentLoaded', onContentLoaded);
+        bind(window, 'load', ready);
     });
 }
