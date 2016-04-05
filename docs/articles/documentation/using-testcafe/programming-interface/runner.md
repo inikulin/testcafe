@@ -153,9 +153,10 @@ Parameter                  | Type    | Description                              
 `takeOnFails` *(optional)* | Boolean | Specifies if screenshots should be taken automatically whenever a test fails. | `false`
 
 The `screenshots` function must be called in order to enable TestCafe to take screenshots whenever the `screenshot` action is called from test code.
-If the `screenshots` function is not called, the `screenshot` action is ignored.
 
 The `takeOnFails` parameter handles a separate scenario of capturing the webpage. Set it to `true` to make TestCafe take a screenshot whenever a test fails.
+
+> Important! If the `screenshots` function is not called, TestCafe does not take screenshots.
 
 **Example**
 

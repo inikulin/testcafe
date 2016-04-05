@@ -1,32 +1,5 @@
 - item: GETTING STARTED
   url: /testcafe/documentation/getting-started/
-- folder: TEST API
-  url: .
-  content:
-  - item: Fixtures and Tests
-    url: .
-  - item: Actions
-    url: .
-  - item: Assertions
-    url: .
-  - item: Client Functions
-    url: .
-  - item: Roles
-    url: .
-  - item: Wait Functions
-    url: .
-  - item: Conditional Functions
-    url: .
-  - item: Handling Native Dialogs
-    url: .
-  - item: HTTP Authentication
-    url: .
-  - item: Switching Frames
-    url: .
-  - item: Injecting Scripts
-    url: .
-  - item: Identifying Webpage Elements
-    url: .
 - folder: USING TESTCAFE
   url: /testcafe/documentation/using-testcafe/
   content:
@@ -50,6 +23,36 @@
       url: /testcafe/documentation/using-testcafe/common-concepts/browser-aliases.html
     - item: Reporters
       url: /testcafe/documentation/using-testcafe/common-concepts/reporters.html
+- folder: TEST API
+  url: /testcafe/documentation/test-api/
+  content:
+  - item: Test Code Structure
+    url: /testcafe/documentation/test-api/test-code-structure.html
+  - item: Actions
+    url: /testcafe/documentation/test-api/actions.html
+  - item: Assertions
+    url: /testcafe/documentation/test-api/assertions.html
+  - folder: Executing Code in the Browser
+    url: /testcafe/documentation/test-api/executing-code-in-the-browser/
+    content:
+    - item: DOM Node Snapshot Members
+      url: /testcafe/documentation/test-api/executing-code-in-the-browser/dom-node-snapshot-members.html
+  - item: Roles
+    url: /testcafe/documentation/test-api/roles.html
+  - item: Wait Functions
+    url: /testcafe/documentation/test-api/wait-functions.html
+  - item: Conditional Functions
+    url: /testcafe/documentation/test-api/conditional-functions.html
+  - item: Handling Native Dialogs
+    url: /testcafe/documentation/test-api/handling-native-dialogs.html
+  - item: HTTP Authentication
+    url: /testcafe/documentation/test-api/http-authentication.html
+  - item: Switching Frames
+    url: /testcafe/documentation/test-api/switching-frames.html
+  - item: Injecting Scripts
+    url: /testcafe/documentation/test-api/injecting-scripts.html
+  - item: Identifying Webpage Elements
+    url: /testcafe/documentation/test-api/identifying-webpage-elements.html
 - folder: EXTENDING TESTCAFE
   url: /testcafe/documentation/extending-testcafe/
   content:
